@@ -4,9 +4,6 @@ import requests
 from pprint import pprint
 import json
 import config
-import time
-
-from requests import api
 
 class textSentiment:
     

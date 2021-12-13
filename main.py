@@ -5,7 +5,6 @@ from pymongo import MongoClient
 from textSentiment import textSentiment
 from videoFrameRead import videoFrameRead
 import config
-import json
 
 app = Flask(__name__)
 client = config.client
