@@ -58,5 +58,3 @@ def get_data():
             raise ValueError("Id's not found in database")
             return("False")
         
-if __name__ == "__main__":
-    app.run()
