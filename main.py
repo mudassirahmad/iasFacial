@@ -8,7 +8,7 @@ import config
 
 app = Flask(__name__)
 client = config.client
-link ='C:/Users/Mudassir/Desktop/Emotion_recognition/video.mp4'
+link ='https://res.cloudinary.com/dx6obccn6/video/upload/v1639421740/video_vodrme.mp4'
 
 
 
