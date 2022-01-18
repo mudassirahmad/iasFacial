@@ -1,47 +1,44 @@
-from flask import Flask, config
+from flask import Flask, config,Response
 from flask import request
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from textSentiment import textSentiment
 from videoFrameRead import videoFrameRead
 import config
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 client = config.client
-link ='https://res.cloudinary.com/dx6obccn6/video/upload/v1639421740/video_vodrme.mp4'
-
-
+url ='https://res.cloudinary.com/dx6obccn6/video/upload/v1641873829/testing_ktftma.ogg'
 
 
 @app.route('/sentiment', methods=['POST'])
 def get_data():
-    # url = 'http://127.0.0.1:5000/'
-    # payload={
-    #     "applicantId": applicantID,
-    #     "jobId":jobId,
-    #     "email":email
-    # }
-    # headers ={
-    #     'Content-Type': 'applicantion/json'
-    # }
-    # response = requests.request("POST",url, headers=headers, json=payload)
-    # print(response)
-
+    
+    
     if request.method == "POST":
         request_data = request.get_json()
-        # jobId = request_data['jobID']
-        # userId = request_data['userID']
-        # link= request_data['link']
-        jobId='6127ce25737dd9379811b4a3'
-        userId='6113cc4b25bcf835a8ca69cc'
-        textsenti=textSentiment()
+        
+        #jobID = request_data['jobID']
+        #userID = request_data['userID']
+        jobID='61c15a12909d9e00232ff5e7'
+        userID='619bfe7717cbcc00236ed8d1'
+        url= request_data['url']
+        # name=request_data['name']
+        
+        print(jobID,"userid",userID,"link", url)
+        print("link:",url)
+        textsenti=textSentiment()   
         videoEmotion=videoFrameRead()
+        link=url
         
         Data1=textsenti.get_token(link)
+        print(Data1)
         print("facial starts")
         Data2=videoEmotion.facialEmtions(link)
-        print("facial sone")
-        # print(type(Data))
+        print("facial done")
+        
         db=client.IAS
         records=db.interviewresults
         data_update={
@@ -50,12 +47,13 @@ def get_data():
             'recordedResult': [{"Text":Data1, "Video":Data2}]
         }
         
-        if(records.find({"jobID" : ObjectId("{}".format(jobId)), "userID": ObjectId("{}".format(userId))})):
-            records.update_one({"jobID" : ObjectId("{}".format(jobId)), "userID": ObjectId("{}".format(userId))}, {'$set': data_update})
-            return("True")
+        if(records.find({"jobID" : ObjectId("{}".format(jobID)), "userID": ObjectId("{}".format(userID))})):
+            records.update_one({"jobID" : ObjectId("{}".format(jobID)), "userID": ObjectId("{}".format(userID))}, {'$set': data_update})
+            
+            print("In update")
+            return Response("True", status=201, mimetype='application/json')
         else:
-            raise ValueError("Id's not found in database")
-            return("False")
+            return Response("User Not Found", status=400, mimetype='application/json')
         
 if __name__==("__main__"):
     app.run()

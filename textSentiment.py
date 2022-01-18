@@ -1,4 +1,5 @@
 
+import time
 from flask.config import ConfigAttribute
 import requests
 from pprint import pprint
@@ -54,6 +55,7 @@ class textSentiment:
         response = requests.request("POST", url, headers=headers, json=payload)
 
         print(response.text)
+        # JWT=json.load(response.text)
         txn_id = response.json()["data"]["txnId"]
 
         #run text to speech model
@@ -138,30 +140,32 @@ class textSentiment:
         headers = {
             'authorization': 'Bearer {}'.format(token)
         }
-        # response = requests.request(
-        #     "GET", metadata_url, headers=headers, data=payload)
+        response = requests.request(
+            "GET", metadata_url, headers=headers, data=payload)
         
         data = {
-            "Confidence": 80,
+            "Confidence": 75,
             "Emotion": {
-                "ANNOYANCE": 11,
-                "OPTIMISM": 17,
-                "GRATITUDE": 5,
                 "AMUSEMENT": 5,
+                "OPTIMISM": 17,
+                "JOY": 5,
+                "GRATITUDE": 5,
+                "ADMIRATION": 11,
                 "NEUTRAL": 41,
-                "ADMIRATION": 11
+                "ANNOYANCE": 11
             },
             "Tone": {
-                "happy": 35,
-                "calm": 64
+                "calm": 64,
+                "happy": 35
             },
             "Sentiment": {
+                "Mostly Positive": 23,
                 "Very Positive": 23,
                 "Neutral": 52
             }
         }
         return data
-        # return response.json()
+        return response.json()
         emotion = []
         confidence = []
         tone = []
